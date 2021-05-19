@@ -1,0 +1,66 @@
+package org.hibernate.service;
+
+import java.util.ArrayList;
+
+import javax.ws.rs.Consumes;
+import javax.ws.rs.FormParam;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+
+import org.hibernate.dao.CustomerDao;
+import org.hibernate.model.Customer;
+
+@Path("/customer")
+public class CustomerService {
+	
+	CustomerDao customerDao = new CustomerDao();
+	
+	@GET
+	@Path("/getCustomer/{id}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Customer getCustomer(@PathParam("id") int id) {
+		Customer c=customerDao.getCustomer(id);
+		System.out.println(c.getCustomerID());
+		System.out.println(c.getCustomerName());
+
+		return c;
+		
+	}
+	
+	@POST
+	@Path("/addCustomer")
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	public String addCustomer(@FormParam("customerName") String customerName) {
+		
+		Customer customer =new Customer();
+		customer.setCustomerName(customerName);
+		
+		return customerDao.addCustomer(customer);
+		
+	}
+	
+	@GET
+	@Path("/delete/{id}")
+	public String deleteCustomer(@PathParam("id") int id) {
+		return customerDao.deleteCustomer(id);
+	}
+	
+	@POST
+	@Path("/update")
+	public String updateCustomer(Customer customer) {
+		return customerDao.updateCustomer(customer);
+	}
+	
+	
+	@GET
+	@Path("/getAll")
+	@Produces(MediaType.APPLICATION_JSON)
+	public ArrayList<Customer> getAllCustomer(){
+		return customerDao.getallCustomer();
+	}
+
+}
